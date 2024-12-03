@@ -5,7 +5,7 @@ if __name__ == '__main__':
     tasks = {
         "algorithms" : ["simple_classification"],
         "datasets": ["indian_pines"],
-        "target_sizes" : [32]
+        "target_sizes" : [10]
     }
     ev = TaskRunner(tasks,1,tag,verbose=True)
     ev.evaluate()
