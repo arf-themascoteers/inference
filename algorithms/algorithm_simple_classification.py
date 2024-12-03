@@ -2,6 +2,7 @@ from algorithm import Algorithm
 import torch
 import torch.nn as nn
 import numpy as np
+from kan import KAN
 
 class Algorithm_simple_classification(Algorithm):
     def __init__(self, dataset, train_x, train_y, test_x, test_y, target_size, class_size, fold, reporter, verbose):
@@ -26,14 +27,7 @@ class Algorithm_simple_classification(Algorithm):
         self.lr = 0.001
         self.total_epoch = 1000
 
-        self.ann = nn.Sequential(
-            nn.Linear(target_size, 64),
-            nn.BatchNorm1d(64),
-            nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
-            nn.Linear(32, class_size),
-        )
+        self.ann = KAN(width=[self.target_size, self.class_size], grid=5, k=3, seed=42, device='cuda')
         self.ann.to(self.device)
         self.reporter.create_epoch_report(self.get_name(), self.dataset.name, self.target_size, self.fold)
 

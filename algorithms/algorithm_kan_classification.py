@@ -24,7 +24,7 @@ class Algorithm_kan_classification(Algorithm):
         self.criterion = torch.nn.CrossEntropyLoss()
         self.class_size = 1
         self.lr = 0.001
-        self.total_epoch = 1000
+        self.total_epoch = 50
 
         self.ann = nn.Sequential(
             nn.Linear(target_size, 64),

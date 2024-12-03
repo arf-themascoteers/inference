@@ -1,11 +1,11 @@
 from task_runner import TaskRunner
 
 if __name__ == '__main__':
-    tag = "cases"
+    tag = "kan"
     tasks = {
-        "algorithms" : ["simple_classification"],
+        "algorithms" : ["kan_classification"],
         "datasets": ["indian_pines"],
-        "target_sizes" : [10]
+        "target_sizes" : [10,200]
     }
     ev = TaskRunner(tasks,1,tag,verbose=True)
     ev.evaluate()
