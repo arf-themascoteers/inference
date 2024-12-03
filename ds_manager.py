@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 
 class DSManager:
@@ -16,7 +17,7 @@ class DSManager:
         self.data[:,0:-1] = MinMaxScaler().fit_transform(self.data[:,0:-1])
         self.class_size = 1
         if self.is_classification():
-            self.class_size = len(df["class"].unique())
+            self.class_size = np.unique(self.data[:, -1]).size
 
     def get_k_folds(self):
         for i in range(self.folds):

@@ -11,13 +11,13 @@ class Algorithm_simple_classification(Algorithm):
         torch.cuda.manual_seed(1)
         torch.backends.cudnn.deterministic = True
 
-        self.train_x = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
-        self.train_y = torch.tensor(self.dataset.get_train_y(), dtype=torch.int32).to(self.device)
-        self.test_x = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
-        self.test_y = torch.tensor(self.dataset.get_train_y(), dtype=torch.int32).to(self.device)
+        self.train_x = torch.tensor(train_x, dtype=torch.float32).to(self.device)
+        self.train_y = torch.tensor(train_y, dtype=torch.int32).to(self.device)
+        self.test_x = torch.tensor(test_x, dtype=torch.float32).to(self.device)
+        self.test_y = torch.tensor(test_y, dtype=torch.int32).to(self.device)
         self.indices = list(range(self.train_x.shape[1]))
-        if self.target_size!=self.train_x:
-            self.indices = np.linspace(0, self.train_x.shape[1], self.target_size, dtype=int).tolist()
+        if self.target_size != self.train_x.shape[1] and self.target_size != -1:
+            self.indices = np.linspace(0, self.train_x.shape[1]-1, self.target_size, dtype=int).tolist()
             self.train_x = self.train_x[:, self.indices]
             self.test_x = self.test_x[:, self.indices]
 
@@ -41,10 +41,11 @@ class Algorithm_simple_classification(Algorithm):
         self.ann.train()
         self.write_columns()
         optimizer = torch.optim.Adam(self.ann.parameters(), lr=self.lr, weight_decay=self.lr/10)
+        y = self.train_y.type(torch.LongTensor).to(self.device)
         for epoch in range(self.total_epoch):
             optimizer.zero_grad()
             y_hat = self.predict_train()
-            loss = self.criterion(y_hat, self.train_y)
+            loss = self.criterion(y_hat, y)
             loss.backward()
             optimizer.step()
             self.report(epoch)
@@ -80,3 +81,7 @@ class Algorithm_simple_classification(Algorithm):
         cells = [epoch, r2, rmse, rpd, rpiq, train_r2, train_rmse, train_rpd, train_rpiq] + bands
         cells = [round(item, 5) if isinstance(item, float) else item for item in cells]
         print("".join([str(i).ljust(20) for i in cells]))
+
+
+    def get_indices(self):
+        return self.indices
