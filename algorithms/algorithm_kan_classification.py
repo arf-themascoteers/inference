@@ -26,14 +26,7 @@ class Algorithm_kan_classification(Algorithm):
         self.lr = 0.001
         self.total_epoch = 50
 
-        self.ann = nn.Sequential(
-            nn.Linear(target_size, 64),
-            nn.BatchNorm1d(64),
-            nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.BatchNorm1d(32),
-            nn.Linear(32, class_size),
-        )
+        self.ann = KAN(width=[self.target_size, self.class_size], grid=5, k=3, seed=42, device='cuda')
         self.ann.to(self.device)
         self.reporter.create_epoch_report(self.get_name(), self.dataset.name, self.target_size, self.fold)
 
