@@ -24,11 +24,10 @@ class Algorithm_kan_classification(Algorithm):
             self.test_x = self.test_x[:, self.indices]
 
         self.criterion = torch.nn.CrossEntropyLoss()
-        self.class_size = 1
         self.lr = 0.001
         self.total_epoch = 50
 
-        self.ann = KAN(width=[self.target_size, self.class_size], grid=5, k=3, seed=42, device='cuda')
+        self.ann = KAN(width=[self.target_size, class_size], grid=5, k=3, seed=42, device='cuda')
         self.ann.to(self.device)
         self.reporter.create_epoch_report(self.get_name(), self.dataset.name, self.target_size, self.fold)
 

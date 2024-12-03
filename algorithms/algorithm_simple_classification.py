@@ -23,7 +23,6 @@ class Algorithm_simple_classification(Algorithm):
             self.test_x = self.test_x[:, self.indices]
 
         self.criterion = torch.nn.CrossEntropyLoss()
-        self.class_size = 1
         self.lr = 0.001
         self.total_epoch = 1000
 
