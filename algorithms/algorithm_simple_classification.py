@@ -24,7 +24,7 @@ class Algorithm_simple_classification(Algorithm):
         self.criterion = torch.nn.CrossEntropyLoss()
         self.class_size = 1
         self.lr = 0.001
-        self.total_epoch = 200
+        self.total_epoch = 1000
 
         self.ann = nn.Sequential(
             nn.Linear(target_size, 64),
@@ -47,6 +47,7 @@ class Algorithm_simple_classification(Algorithm):
             y_hat = self.predict_train()
             loss = self.criterion(y_hat, y)
             loss.backward()
+            #print(loss.item())
             optimizer.step()
             self.report(epoch)
         return self

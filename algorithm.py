@@ -3,6 +3,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 import torch
 import importlib
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 
 class Algorithm(ABC):
@@ -35,6 +36,12 @@ class Algorithm(ABC):
     def calculate_metrics(self, y_test, y_pred):
         y_test = Algorithm.convert_to_numpy(y_test.detach().cpu().numpy())
         y_pred = Algorithm.convert_to_numpy(y_pred.detach().cpu().numpy())
+
+        if self.dataset.is_classification():
+            pred_labels = np.argmax(y_pred, axis=1)
+            accuracy = accuracy_score(y_test, pred_labels)
+            return round(accuracy,2),0,0,0
+
 
         r2 = r2_score(y_test, y_pred)
         #r2 = max(r2,0)
