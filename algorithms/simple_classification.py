@@ -1,7 +1,7 @@
 from algorithm import Algorithm
 import torch
 import torch.nn as nn
-
+import numpy as np
 
 class Algorithm_simple_classification(Algorithm):
     def __init__(self, dataset, train_x, train_y, test_x, test_y, target_size, class_size, fold, reporter, verbose):
@@ -15,6 +15,11 @@ class Algorithm_simple_classification(Algorithm):
         self.train_y = torch.tensor(self.dataset.get_train_y(), dtype=torch.int32).to(self.device)
         self.test_x = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
         self.test_y = torch.tensor(self.dataset.get_train_y(), dtype=torch.int32).to(self.device)
+        self.indices = list(range(self.train_x.shape[1]))
+        if self.target_size!=self.train_x:
+            self.indices = np.linspace(0, self.train_x.shape[1], self.target_size, dtype=int).tolist()
+            self.train_x = self.train_x[:, self.indices]
+            self.test_x = self.test_x[:, self.indices]
 
         self.criterion = torch.nn.CrossEntropyLoss()
         self.class_size = 1
@@ -46,10 +51,10 @@ class Algorithm_simple_classification(Algorithm):
         return self
 
     def predict_train(self):
-        return self.ann(self.linterp_train)
+        return self.ann(self.train_x)
 
     def predict_test(self):
-        return self.ann(self.linterp_test)
+        return self.ann(self.test_x)
 
     def write_columns(self):
         if not self.verbose:
@@ -63,7 +68,7 @@ class Algorithm_simple_classification(Algorithm):
         if epoch%10 != 0:
             return
 
-        bands = self.get_indices()
+        bands = self.indices
 
         train_y_hat = self.predict_train()
         test_y_hat = self.predict_test()
@@ -75,7 +80,3 @@ class Algorithm_simple_classification(Algorithm):
         cells = [epoch, r2, rmse, rpd, rpiq, train_r2, train_rmse, train_rpd, train_rpiq] + bands
         cells = [round(item, 5) if isinstance(item, float) else item for item in cells]
         print("".join([str(i).ljust(20) for i in cells]))
-
-    def get_indices(self):
-        indices = torch.round(self.ann.get_indices() * self.original_feature_size ).to(torch.int64).tolist()
-        return list(dict.fromkeys(indices))

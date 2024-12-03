@@ -1,9 +1,9 @@
 from task_runner import TaskRunner
 
 if __name__ == '__main__':
-    tag = "32"
+    tag = "cases"
     tasks = {
-        "algorithms" : ["classification_32_dyn"],
+        "algorithms" : ["simple_classification"],
         "datasets": ["indian_pines"],
         "target_sizes" : [32]
     }
