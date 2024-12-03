@@ -2,7 +2,7 @@ from algorithm import Algorithm
 import torch
 import torch.nn as nn
 import numpy as np
-from kan import KAN
+
 
 class Algorithm_simple_classification(Algorithm):
     def __init__(self, dataset, train_x, train_y, test_x, test_y, target_size, class_size, fold, reporter, verbose):
